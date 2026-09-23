@@ -1,7 +1,10 @@
 import axios from 'axios'
 
+// Read live backend API URL from VITE_API_URL, defaulting to local dev URL
+const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
 const axiosInstance = axios.create({
-  baseURL: '/api',
+  baseURL,
   headers: { 'Content-Type': 'application/json' },
 })
 

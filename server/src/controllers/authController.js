@@ -99,8 +99,8 @@ exports.forgotPassword = async (req, res, next) => {
 
     await user.update({ reset_token: token, reset_token_expiry: expiry });
 
-    const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
-    const resetLink = `${clientUrl}/reset-password?token=${token}`;
+    const clientUrl = process.env.FRONTEND_URL || process.env.CLIENT_URL || 'http://localhost:5173';
+    const resetLink = `${clientUrl.replace(/\/+$/, '')}/reset-password?token=${token}`;
 
     console.log(`\n🔑 Password Reset Link for ${email}:\n${resetLink}\n`);
 
