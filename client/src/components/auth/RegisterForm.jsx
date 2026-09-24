@@ -44,7 +44,7 @@ export default function RegisterForm() {
       <div className="relative">
         <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
         <input name="fullName" placeholder="Full name" value={form.fullName}
-          onChange={handleChange} className="input-field pl-9" required />
+          onChange={handleChange} className="input-field pl-9" autoComplete="name" required />
       </div>
 
       <div className="flex rounded-lg border border-gray-200 p-1 gap-1">
@@ -62,13 +62,13 @@ export default function RegisterForm() {
         <div className="relative">
           <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
           <input name="email" type="email" placeholder="Email address" value={form.email}
-            onChange={handleChange} className="input-field pl-9" />
+            onChange={handleChange} className="input-field pl-9" autoComplete="username" />
         </div>
       ) : (
         <div className="relative">
           <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
           <input name="mobile_no" type="tel" placeholder="Mobile number" value={form.mobile_no}
-            onChange={handleChange} className="input-field pl-9" />
+            onChange={handleChange} className="input-field pl-9" autoComplete="tel" />
         </div>
       )}
 

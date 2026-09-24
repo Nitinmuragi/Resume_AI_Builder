@@ -60,13 +60,13 @@ export default function LoginForm() {
         <div className="relative">
           <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
           <input name="email" type="email" placeholder="Email address" value={form.email}
-            onChange={handleChange} className="input-field pl-9" />
+            onChange={handleChange} className="input-field pl-9" autoComplete="username" />
         </div>
       ) : (
         <div className="relative">
           <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
           <input name="mobile_no" type="tel" placeholder="Mobile number" value={form.mobile_no}
-            onChange={handleChange} className="input-field pl-9" />
+            onChange={handleChange} className="input-field pl-9" autoComplete="tel" />
         </div>
       )}
 
