@@ -16,10 +16,12 @@ const app = express();
 // ─── Security Middleware ───────────────────────────────────────────────────────
 app.use(helmet());
 
-const allowedOrigins = [
-  ...(process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(u => u.trim().replace(/\/+$/, '')) : []),
-  ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(u => u.trim().replace(/\/+$/, '')) : []),
-];
+const rawOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.CLIENT_URL,
+].filter(Boolean).flatMap(val => val.split(','));
+
+const allowedOrigins = rawOrigins.map(url => url.trim().replace(/\/+$/, ''));
 
 if (process.env.NODE_ENV === 'development') {
   allowedOrigins.push('http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173');
@@ -27,18 +29,27 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (e.g. server-to-server, mobile, curl)
+    // Allow non-browser requests (e.g. mobile, curl, Postman, server-to-server)
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
+    const cleanOrigin = origin.replace(/\/+$/, '');
+
+    // 1. Allow explicitly configured FRONTEND_URL or CLIENT_URL
+    if (allowedOrigins.includes(cleanOrigin)) {
       return callback(null, true);
     }
 
-    if (process.env.NODE_ENV === 'development' && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+    // 2. Automatically allow all Netlify domains (production & deploy previews)
+    if (/^https:\/\/([a-zA-Z0-9_-]+\.)*netlify\.(app|com)$/.test(cleanOrigin)) {
       return callback(null, true);
     }
 
-    return callback(new Error(`Origin '${origin}' not allowed by CORS`));
+    // 3. In development mode, allow any localhost port
+    if (process.env.NODE_ENV === 'development' && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(cleanOrigin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS Error: Origin '${origin}' is not authorized.`));
   },
   credentials: true,
 }));

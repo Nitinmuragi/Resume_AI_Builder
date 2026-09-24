@@ -12,6 +12,7 @@ client/.env
 !.env.example
 !server/.env.example
 !client/.env.example
+!client/.env.production
 
 # Production builds
 dist/

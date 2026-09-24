@@ -1,10 +1,33 @@
 import axios from 'axios'
 
-// Read live backend API URL from VITE_API_URL, defaulting to local dev URL
-const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+// 1. Resolve raw URL from Vite environment variable (VITE_API_URL)
+let rawBaseURL = import.meta.env.VITE_API_URL
+
+// 2. Fallback handling:
+//    - In development mode (npm run dev): default to localhost:5000/api
+//    - In production (Netlify): warn if VITE_API_URL is missing
+if (!rawBaseURL) {
+  if (import.meta.env.DEV) {
+    rawBaseURL = 'http://localhost:5000/api'
+  } else {
+    console.error(
+      '[ResumeBuilder] VITE_API_URL is not set in Netlify environment variables! ' +
+      'Please add VITE_API_URL in Netlify: Site configuration -> Environment variables.'
+    )
+    rawBaseURL = '/api'
+  }
+}
+
+// 3. Normalize baseURL: trim whitespace and remove trailing slashes
+let cleanBaseURL = (rawBaseURL || '').trim().replace(/\/+$/, '')
+
+// 4. Ensure it ends with /api (handles both https://app.onrender.com and https://app.onrender.com/api)
+if (cleanBaseURL && !cleanBaseURL.endsWith('/api')) {
+  cleanBaseURL = `${cleanBaseURL}/api`
+}
 
 const axiosInstance = axios.create({
-  baseURL,
+  baseURL: cleanBaseURL,
   headers: { 'Content-Type': 'application/json' },
 })
 

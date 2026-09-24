@@ -73,7 +73,7 @@ export default function LoginForm() {
       <div className="relative">
         <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
         <input name="password" type={showPassword ? 'text' : 'password'} placeholder="Password" value={form.password}
-          onChange={handleChange} className="input-field pl-9 pr-10" />
+          onChange={handleChange} className="input-field pl-9 pr-10" autoComplete="current-password" />
         <button type="button" onClick={() => setShowPassword(!showPassword)}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
           {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
