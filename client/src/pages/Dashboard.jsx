@@ -56,6 +56,9 @@ export default function Dashboard() {
     const toastId = toast.loading('Generating PDF...')
     try {
       const res = await exportPDF(id)
+      if (res.data?.type && res.data.type.includes('application/json')) {
+        throw new Error('Server returned JSON instead of PDF')
+      }
       const url = URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }))
       const a = document.createElement('a')
       a.href = url
@@ -64,7 +67,8 @@ export default function Dashboard() {
       URL.revokeObjectURL(url)
       toast.success('PDF downloaded!', { id: toastId })
     } catch {
-      toast.error('PDF generation failed', { id: toastId })
+      toast.dismiss(toastId)
+      navigate(`/resume/${id}/preview`, { state: { autoDownload: true } })
     }
   }
 

@@ -18,13 +18,15 @@ const TEMPLATE_MAP = {
   'Creative-ATS': CreativeAtsTemplate,
 }
 
-export default function ResumePreview({ resumeData, template }) {
+export default function ResumePreview({ resumeData, template, id = 'resume-preview-document' }) {
   const name = template?.template_name || 'Modern'
   const TemplateComponent = TEMPLATE_MAP[name] || ModernTemplate
 
   return (
     <div className="shadow-lg rounded-lg overflow-hidden" style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
-      <TemplateComponent resumeData={resumeData} />
+      <div id={id} style={{ background: '#ffffff', minHeight: '1056px' }}>
+        <TemplateComponent resumeData={resumeData} />
+      </div>
     </div>
   )
 }

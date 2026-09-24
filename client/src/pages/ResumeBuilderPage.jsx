@@ -6,6 +6,7 @@ import { fetchResumeById } from '../store/resumeSlice'
 import { fetchProfile } from '../store/profileSlice'
 import { updateResume } from '../api/resumeApi'
 import { exportPDF } from '../api/resumeApi'
+import { generateClientPdf } from '../utils/pdfGenerator'
 import Navbar from '../components/common/Navbar'
 import Loader from '../components/common/Loader'
 import ResumeSectionEditor from '../components/resume/ResumeSectionEditor'
@@ -110,15 +111,30 @@ export default function ResumeBuilderPage() {
     // Save first
     await handleSave()
     const toastId = toast.loading('Generating PDF...')
+    const filename = `${title || 'resume'}.pdf`
+
     try {
       const res = await exportPDF(id)
+      if (res.data?.type && res.data.type.includes('application/json')) {
+        throw new Error('Server returned JSON instead of PDF')
+      }
       const url = URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }))
       const a = document.createElement('a')
-      a.href = url; a.download = `${title || 'resume'}.pdf`; a.click()
+      a.href = url
+      a.download = filename
+      a.click()
       URL.revokeObjectURL(url)
       toast.success('PDF downloaded!', { id: toastId })
-    } catch {
-      toast.error('PDF generation failed', { id: toastId })
+    } catch (serverErr) {
+      console.warn('Server PDF export failed, falling back to client-side generator:', serverErr)
+      try {
+        const targetId = showPreview ? 'resume-preview-document' : 'resume-builder-hidden-preview-doc'
+        await generateClientPdf(targetId, filename)
+        toast.success('PDF downloaded!', { id: toastId })
+      } catch (clientErr) {
+        console.error('Client PDF generation failed:', clientErr)
+        toast.error('PDF generation failed', { id: toastId })
+      }
     }
   }
 
@@ -203,6 +219,26 @@ export default function ResumeBuilderPage() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Hidden offscreen container for PDF generation when preview toggle is off */}
+      <div
+        style={{
+          position: 'fixed',
+          left: '-9999px',
+          top: 0,
+          width: '794px',
+          pointerEvents: 'none',
+          opacity: 0,
+          zIndex: -999,
+        }}
+        aria-hidden="true"
+      >
+        <ResumePreview
+          resumeData={resumeData}
+          template={currentResume?.template}
+          id="resume-builder-hidden-preview-doc"
+        />
       </div>
     </div>
   )
