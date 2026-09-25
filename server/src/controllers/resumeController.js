@@ -123,15 +123,24 @@ exports.exportPDF = async (req, res, next) => {
     });
     if (!resume) return res.status(404).json({ error: 'Resume not found.' });
 
-    const pdfBuffer = await generatePDF(resume.resume_data, resume.template);
+    try {
+      const pdfBuffer = await generatePDF(resume.resume_data, resume.template);
 
-    const fileName = `${resume.title || 'resume'}-${Date.now()}.pdf`;
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="${fileName}"`,
-      'Content-Length': pdfBuffer.length,
-    });
-    res.send(pdfBuffer);
+      const fileName = `${resume.title || 'resume'}-${Date.now()}.pdf`;
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Content-Length': pdfBuffer.length,
+      });
+      return res.send(pdfBuffer);
+    } catch (pdfErr) {
+      console.error('[PDF Export Server Error]: Puppeteer generation failed:', pdfErr.message);
+      return res.status(500).json({
+        error: 'Server-side PDF generation failed in this environment.',
+        details: pdfErr.message,
+        fallbackRequired: true,
+      });
+    }
   } catch (err) {
     next(err);
   }

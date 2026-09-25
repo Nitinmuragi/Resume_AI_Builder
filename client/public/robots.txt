@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://atsveifiedresume.netlify.app/sitemap.xml
