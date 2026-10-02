@@ -79,6 +79,9 @@ export default function ResumeBuilderPage() {
     certifications: (prof.certifications || []).map(c => ({
       title: c.title, issuedBy: c.issued_by, issueDate: c.issue_date,
     })),
+    achievements: (prof.achievements || []).map(a => ({
+      title: a.title, issuer: a.issuer || a.issuedBy || '', date: a.date || a.issueDate || '', description: a.description || '',
+    })),
     languages: (prof.userLanguages || []).map(ul => ({
       name: ul.language?.language_name, proficiency: ul.proficiency,
     })),
@@ -92,6 +95,7 @@ export default function ResumeBuilderPage() {
     education: [],
     projects: [],
     certifications: [],
+    achievements: [],
     languages: [],
   })
 

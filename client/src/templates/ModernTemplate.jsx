@@ -6,6 +6,7 @@ export default function ModernTemplate({ resumeData = {} }) {
   const education = resumeData.education || []
   const projects = resumeData.projects || []
   const certs = resumeData.certifications || []
+  const achievements = resumeData.achievements || []
   const languages = resumeData.languages || []
 
   const profColor = { Basic: '#fbbf24', Intermediate: '#60a5fa', Advanced: '#34d399' }
@@ -114,11 +115,28 @@ export default function ModernTemplate({ resumeData = {} }) {
 
           {/* Certifications */}
           {certs.length > 0 && (
-            <div>
+            <div style={{ marginBottom: achievements.length > 0 ? '20px' : '0' }}>
               <h2 style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', color: '#1e3a5f', borderBottom: '2px solid #1e3a5f', paddingBottom: '4px', marginBottom: '10px' }}>Certifications</h2>
               {certs.map((c, i) => (
                 <div key={i} style={{ marginBottom: '6px', fontSize: '11px' }}>
                   <strong>{c.title}</strong> — {c.issuedBy} {c.issueDate && `(${c.issueDate})`}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Achievements & Awards */}
+          {achievements.length > 0 && (
+            <div>
+              <h2 style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', color: '#1e3a5f', borderBottom: '2px solid #1e3a5f', paddingBottom: '4px', marginBottom: '10px' }}>Achievements & Awards</h2>
+              {achievements.map((a, i) => (
+                <div key={i} style={{ marginBottom: '8px', fontSize: '11px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                    <strong>{a.title}</strong>
+                    {a.date && <span style={{ fontSize: '10px', color: '#94a3b8' }}>{a.date}</span>}
+                  </div>
+                  {a.issuer && <div style={{ fontSize: '10px', color: '#4b5563' }}>{a.issuer}</div>}
+                  {a.description && <p style={{ marginTop: '2px', fontSize: '10.5px', lineHeight: '1.4', color: '#4b5563' }}>{a.description}</p>}
                 </div>
               ))}
             </div>

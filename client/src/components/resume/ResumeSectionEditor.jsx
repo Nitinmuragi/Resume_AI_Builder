@@ -68,6 +68,15 @@ export default function ResumeSectionEditor({ resumeData, onChange }) {
   }
   const removeCert = (i) => update('certifications', resumeData.certifications.filter((_, idx) => idx !== i))
 
+  // Achievements & Awards / Extracurricular Activities
+  const addAchievement = () => update('achievements', [...(resumeData.achievements || []), { title: '', issuer: '', date: '', description: '' }])
+  const updateAchievement = (i, field, val) => {
+    const arr = [...(resumeData.achievements || [])]
+    arr[i] = { ...arr[i], [field]: val }
+    update('achievements', arr)
+  }
+  const removeAchievement = (i) => update('achievements', (resumeData.achievements || []).filter((_, idx) => idx !== i))
+
   const field = (label, val, setter, type = 'text', placeholder = '') => (
     <div>
       <label className="block text-xs text-gray-500 mb-1">{label}</label>
@@ -230,6 +239,38 @@ export default function ResumeSectionEditor({ resumeData, onChange }) {
           ))}
           <button onClick={addCert} className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700">
             <FiPlus size={14} /> Add Certification
+          </button>
+        </div>
+      </Section>
+
+      {/* Achievements & Awards / Extracurricular Activities */}
+      <Section title="🏆 Achievements & Awards">
+        <div className="mt-4 space-y-3">
+          {(resumeData.achievements || []).map((ach, i) => (
+            <div key={i} className="border border-gray-100 rounded-lg p-3 space-y-2 bg-gray-50">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-semibold text-gray-500">Achievement #{i + 1}</span>
+                <button onClick={() => removeAchievement(i)} className="text-red-400 hover:text-red-600"><FiTrash2 size={14} /></button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {field('Title / Honor / Activity', ach.title, v => updateAchievement(i, 'title', v), 'text', 'e.g. 1st Place - Smart India Hackathon')}
+                {field('Organization / Issuer', ach.issuer, v => updateAchievement(i, 'issuer', v), 'text', 'e.g. Ministry of Education / College')}
+                {field('Date / Year', ach.date, v => updateAchievement(i, 'date', v), 'text', 'e.g. 2024 or Mar 2024')}
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">Description (Optional)</label>
+                <textarea
+                  value={ach.description || ''}
+                  onChange={e => updateAchievement(i, 'description', e.target.value)}
+                  rows={2}
+                  placeholder="Briefly describe your achievement, role, or impact..."
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+                />
+              </div>
+            </div>
+          ))}
+          <button onClick={addAchievement} className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700">
+            <FiPlus size={14} /> Add Achievement / Award
           </button>
         </div>
       </Section>

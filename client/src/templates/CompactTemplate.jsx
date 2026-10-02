@@ -6,6 +6,7 @@ export default function CompactTemplate({ resumeData = {} }) {
   const education = resumeData.education || []
   const projects = resumeData.projects || []
   const certs = resumeData.certifications || []
+  const achievements = resumeData.achievements || []
   const languages = resumeData.languages || []
 
   const EMERALD = '#047857' // Forest Pine / Emerald
@@ -223,6 +224,24 @@ export default function CompactTemplate({ resumeData = {} }) {
                 <strong style={{ color: DARK }}>{c.title}</strong>
                 {(c.issuedBy || c.issued_by) && <span> — {c.issuedBy || c.issued_by}</span>}
                 {(c.issueDate || c.issue_date) && <span style={{ color: '#64748b' }}> ({c.issueDate || c.issue_date})</span>}
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {/* Achievements & Awards */}
+      {achievements.length > 0 && (
+        <Section title="Achievements & Awards">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+            {achievements.map((a, i) => (
+              <div key={i} style={{ fontSize: '9.5px', color: '#334155' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                  <strong style={{ color: DARK }}>{a.title}</strong>
+                  {a.date && <span style={{ fontSize: '9px', color: '#64748b' }}>{a.date}</span>}
+                </div>
+                {a.issuer && <span style={{ color: EMERALD, fontWeight: '500' }}>{a.issuer} </span>}
+                {a.description && <span style={{ color: '#475569' }}>— {a.description}</span>}
               </div>
             ))}
           </div>

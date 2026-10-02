@@ -137,6 +137,14 @@ function extractResumeText(resumeData) {
     });
   }
 
+  if (Array.isArray(resumeData.achievements)) {
+    resumeData.achievements.forEach(a => {
+      if (a.title) parts.push(a.title);
+      if (a.issuer) parts.push(a.issuer);
+      if (a.description) parts.push(a.description);
+    });
+  }
+
   return parts.join(' ');
 }
 

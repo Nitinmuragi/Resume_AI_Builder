@@ -6,6 +6,7 @@ export default function CreativeAtsTemplate({ resumeData = {} }) {
   const education = resumeData.education || []
   const projects = resumeData.projects || []
   const certs = resumeData.certifications || []
+  const achievements = resumeData.achievements || []
   const languages = resumeData.languages || []
 
   const PURPLE = '#7c3aed'
@@ -266,6 +267,28 @@ export default function CreativeAtsTemplate({ resumeData = {} }) {
                   <strong style={{ color: TEXT_DARK }}>{c.title}</strong>
                   {(c.issuedBy || c.issued_by) && <span> — {c.issuedBy || c.issued_by}</span>}
                   {(c.issueDate || c.issue_date) && <span style={{ color: '#64748b', fontSize: '9px' }}> ({c.issueDate || c.issue_date})</span>}
+                </div>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {/* Achievements & Awards */}
+        {achievements.length > 0 && (
+          <Section title="Achievements & Awards" icon="⭐">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {achievements.map((a, i) => (
+                <div key={i} style={{ fontSize: '10px', color: '#334155' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                    <strong style={{ color: TEXT_DARK }}>{a.title}</strong>
+                    {a.date && <span style={{ color: '#64748b', fontSize: '9px' }}>{a.date}</span>}
+                  </div>
+                  {a.issuer && <div style={{ color: PURPLE, fontSize: '9.5px', fontWeight: '500' }}>{a.issuer}</div>}
+                  {a.description && (
+                    <p style={{ marginTop: '2px', fontSize: '10px', lineHeight: '1.45', color: '#475569' }}>
+                      {a.description}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

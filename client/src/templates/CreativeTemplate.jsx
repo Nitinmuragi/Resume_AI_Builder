@@ -6,6 +6,7 @@ export default function CreativeTemplate({ resumeData = {} }) {
   const education = resumeData.education || []
   const projects = resumeData.projects || []
   const certs = resumeData.certifications || []
+  const achievements = resumeData.achievements || []
   const languages = resumeData.languages || []
 
   const TEAL = '#0d9488'
@@ -112,11 +113,27 @@ export default function CreativeTemplate({ resumeData = {} }) {
         )}
 
         {certs.length > 0 && (
-          <div>
+          <div style={{ marginBottom: achievements.length > 0 ? '20px' : '0' }}>
             <h2 style={{ fontSize: '13px', fontWeight: 'bold', color: TEAL, borderLeft: `3px solid ${CORAL}`, paddingLeft: '10px', marginBottom: '10px' }}>Certifications</h2>
             {certs.map((c, i) => (
               <div key={i} style={{ marginBottom: '6px', fontSize: '11px' }}>
                 🏅 <strong>{c.title}</strong> — {c.issuedBy}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {achievements.length > 0 && (
+          <div>
+            <h2 style={{ fontSize: '13px', fontWeight: 'bold', color: TEAL, borderLeft: `3px solid ${CORAL}`, paddingLeft: '10px', marginBottom: '10px' }}>Achievements & Awards</h2>
+            {achievements.map((a, i) => (
+              <div key={i} style={{ marginBottom: '10px', fontSize: '11px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                  <strong style={{ color: '#1f2937' }}>🏆 {a.title}</strong>
+                  {a.date && <span style={{ fontSize: '9px', color: '#9ca3af' }}>{a.date}</span>}
+                </div>
+                {a.issuer && <div style={{ fontSize: '10px', color: TEAL, fontWeight: '500', marginLeft: '18px' }}>{a.issuer}</div>}
+                {a.description && <p style={{ fontSize: '10.5px', lineHeight: '1.5', color: '#4b5563', marginTop: '2px', marginLeft: '18px' }}>{a.description}</p>}
               </div>
             ))}
           </div>

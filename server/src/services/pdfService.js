@@ -127,6 +127,15 @@ function buildResumeHTML(resumeData, template) {
         </div>`).join('')
     : '';
 
+  const achievementsHtml = Array.isArray(data.achievements)
+    ? data.achievements.map(a => `
+        <div class="section-item">
+          <div class="item-header"><strong>${a.title || ''}</strong></div>
+          <div class="item-sub">${a.issuer || ''} ${a.date ? `| ${a.date}` : ''}</div>
+          ${a.description ? `<p>${a.description}</p>` : ''}
+        </div>`).join('')
+    : '';
+
   const languagesHtml = Array.isArray(data.languages)
     ? data.languages.map(l => `<span class="skill-chip">${l.name || l} ${l.proficiency ? `(${l.proficiency})` : ''}</span>`).join('')
     : '';
@@ -176,6 +185,7 @@ function buildResumeHTML(resumeData, template) {
     ${educationHtml ? `<div class="section"><div class="section-title">Education</div>${educationHtml}</div>` : ''}
     ${projectsHtml ? `<div class="section"><div class="section-title">Projects</div>${projectsHtml}</div>` : ''}
     ${certificationsHtml ? `<div class="section"><div class="section-title">Certifications</div>${certificationsHtml}</div>` : ''}
+    ${achievementsHtml ? `<div class="section"><div class="section-title">Achievements & Awards</div>${achievementsHtml}</div>` : ''}
     ${languagesHtml ? `<div class="section"><div class="section-title">Languages</div>${languagesHtml}</div>` : ''}
   </div>
 </body>

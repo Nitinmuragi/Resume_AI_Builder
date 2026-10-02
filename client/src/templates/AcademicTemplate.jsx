@@ -6,6 +6,7 @@ export default function AcademicTemplate({ resumeData = {} }) {
   const education = resumeData.education || []
   const projects = resumeData.projects || []
   const certs = resumeData.certifications || []
+  const achievements = resumeData.achievements || []
   const languages = resumeData.languages || []
 
   const INK = '#1e1b4b' // Deep Scholarly Indigo
@@ -182,14 +183,30 @@ export default function AcademicTemplate({ resumeData = {} }) {
         </Section>
       )}
 
-      {/* Certifications & Fellowships */}
+      {/* Certifications */}
       {certs.length > 0 && (
-        <Section title="Fellowships, Honors & Certifications">
+        <Section title="Certifications & Licensures">
           {certs.map((c, i) => (
             <div key={i} style={{ marginBottom: i === certs.length - 1 ? 0 : '5px', fontSize: '10.5px', color: '#374151' }}>
               <strong style={{ color: INK }}>{c.title}</strong>
               {(c.issuedBy || c.issued_by) && <span> — {c.issuedBy || c.issued_by}</span>}
               {(c.issueDate || c.issue_date) && <span style={{ color: '#6b7280', fontStyle: 'italic' }}> ({c.issueDate || c.issue_date})</span>}
+            </div>
+          ))}
+        </Section>
+      )}
+
+      {/* Achievements, Honors & Activities */}
+      {achievements.length > 0 && (
+        <Section title="Honors, Awards & Activities">
+          {achievements.map((a, i) => (
+            <div key={i} style={{ marginBottom: i === achievements.length - 1 ? 0 : '8px', fontSize: '10.5px', color: '#374151' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                <strong style={{ color: INK }}>{a.title}</strong>
+                {a.date && <span style={{ color: '#6b7280', fontStyle: 'italic', fontSize: '9.5px' }}>{a.date}</span>}
+              </div>
+              {a.issuer && <div style={{ color: SUBINK, fontSize: '10px' }}>{a.issuer}</div>}
+              {a.description && <p style={{ marginTop: '2px', fontSize: '10.5px', lineHeight: '1.5', color: '#4b5563' }}>{a.description}</p>}
             </div>
           ))}
         </Section>

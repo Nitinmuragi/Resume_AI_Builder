@@ -6,6 +6,7 @@ export default function MinimalTemplate({ resumeData = {} }) {
   const education = resumeData.education || []
   const projects = resumeData.projects || []
   const certs = resumeData.certifications || []
+  const achievements = resumeData.achievements || []
   const languages = resumeData.languages || []
 
   const Section = ({ title, children }) => (
@@ -101,6 +102,21 @@ export default function MinimalTemplate({ resumeData = {} }) {
           {certs.map((c, i) => (
             <div key={i} style={{ marginBottom: '4px', fontSize: '11px' }}>
               <strong>{c.title}</strong> — {c.issuedBy} {c.issueDate && `(${c.issueDate})`}
+            </div>
+          ))}
+        </Section>
+      )}
+
+      {achievements.length > 0 && (
+        <Section title="Achievements & Awards">
+          {achievements.map((a, i) => (
+            <div key={i} style={{ marginBottom: '8px', fontSize: '11px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ fontWeight: 'bold' }}>{a.title}</span>
+                {a.date && <span style={{ fontSize: '10px', color: '#9ca3af' }}>{a.date}</span>}
+              </div>
+              {a.issuer && <div style={{ fontSize: '10.5px', color: '#6b7280' }}>{a.issuer}</div>}
+              {a.description && <p style={{ marginTop: '2px', fontSize: '11px', lineHeight: '1.5', color: '#4b5563' }}>{a.description}</p>}
             </div>
           ))}
         </Section>
