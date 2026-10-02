@@ -5,7 +5,7 @@ import { fetchProfile } from '../store/profileSlice'
 import * as profileApi from '../api/profileApi'
 import Navbar from '../components/common/Navbar'
 import Loader from '../components/common/Loader'
-import { FiPlus, FiTrash2, FiSave, FiUser, FiCode, FiGlobe, FiBook, FiBriefcase, FiFolder, FiAward } from 'react-icons/fi'
+import { FiPlus, FiTrash2, FiSave, FiUser, FiCode, FiGlobe, FiBook, FiBriefcase, FiFolder, FiAward, FiStar } from 'react-icons/fi'
 
 const TABS = [
   { id: 'personal', label: 'Personal', icon: <FiUser size={14} /> },
@@ -15,6 +15,7 @@ const TABS = [
   { id: 'experience', label: 'Experience', icon: <FiBriefcase size={14} /> },
   { id: 'projects', label: 'Projects', icon: <FiFolder size={14} /> },
   { id: 'certifications', label: 'Certifications', icon: <FiAward size={14} /> },
+  { id: 'achievements', label: 'Achievements', icon: <FiStar size={14} /> },
 ]
 
 const PROFICIENCY = ['Basic', 'Intermediate', 'Advanced']
@@ -32,6 +33,7 @@ export default function ProfilePage() {
   const [expForm, setExpForm] = useState({ company_name: '', designation: '', start_date: '', end_date: '', is_current: false, description: '' })
   const [projForm, setProjForm] = useState({ title: '', description: '', tech_used: '', project_link: '' })
   const [certForm, setCertForm] = useState({ title: '', issued_by: '', issue_date: '' })
+  const [achForm, setAchForm] = useState({ title: '', issuer: '', date: '', description: '' })
   const [skillsMaster, setSkillsMaster] = useState([])
   const [langsMaster, setLangsMaster] = useState([])
 
@@ -131,6 +133,16 @@ export default function ProfilePage() {
       dispatch(fetchProfile())
       toast.success('Certification added!')
     } catch { toast.error('Failed to add certification') }
+  }
+
+  const handleAddAch = async (e) => {
+    e.preventDefault()
+    try {
+      await profileApi.addAchievement(achForm)
+      setAchForm({ title: '', issuer: '', date: '', description: '' })
+      dispatch(fetchProfile())
+      toast.success('Achievement added!')
+    } catch { toast.error('Failed to add achievement') }
   }
 
   const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
@@ -361,6 +373,83 @@ export default function ProfilePage() {
                       <button onClick={() => profileApi.deleteCertification(c.id).then(() => { dispatch(fetchProfile()); toast.success('Removed') })} className="text-gray-400 hover:text-red-500"><FiTrash2 size={14} /></button>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* Achievements & Awards */}
+            {tab === 'achievements' && (
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">Achievements & Awards</h2>
+                <form onSubmit={handleAddAch} className="space-y-3 mb-5 border border-gray-200 rounded-xl p-4 bg-gray-50">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">Title / Honor / Activity</label>
+                      <input
+                        type="text"
+                        value={achForm.title}
+                        onChange={e => setAchForm(p => ({ ...p, title: e.target.value }))}
+                        placeholder="e.g. 1st Place - Smart India Hackathon"
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">Organization / Issuer</label>
+                      <input
+                        type="text"
+                        value={achForm.issuer}
+                        onChange={e => setAchForm(p => ({ ...p, issuer: e.target.value }))}
+                        placeholder="e.g. Ministry of Education"
+                        className={inputClass}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">Date / Year</label>
+                      <input
+                        type="text"
+                        value={achForm.date}
+                        onChange={e => setAchForm(p => ({ ...p, date: e.target.value }))}
+                        placeholder="e.g. 2024"
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Description (Optional)</label>
+                    <textarea
+                      value={achForm.description}
+                      onChange={e => setAchForm(p => ({ ...p, description: e.target.value }))}
+                      rows={2}
+                      placeholder="Briefly describe your achievement, role, or impact..."
+                      className={inputClass + ' resize-y'}
+                    />
+                  </div>
+                  <button type="submit" className="btn-primary flex items-center gap-1">
+                    <FiPlus size={14} /> Add Achievement
+                  </button>
+                </form>
+                <div className="space-y-3">
+                  {(profile?.achievements || []).map(a => (
+                    <div key={a.id} className="flex justify-between items-start bg-gray-50 rounded-lg p-3 border border-gray-200">
+                      <div>
+                        <div className="font-medium text-sm text-gray-900">{a.title}</div>
+                        <div className="text-xs text-gray-500">
+                          {a.issuer} {a.date && `· ${a.date}`}
+                        </div>
+                        {a.description && <div className="text-xs text-gray-600 mt-1">{a.description}</div>}
+                      </div>
+                      <button
+                        onClick={() => profileApi.deleteAchievement(a.id).then(() => { dispatch(fetchProfile()); toast.success('Removed') })}
+                        className="text-gray-400 hover:text-red-500 p-1"
+                      >
+                        <FiTrash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                  {(!profile?.achievements || profile.achievements.length === 0) && (
+                    <p className="text-xs text-gray-500 text-center py-4">No achievements added yet.</p>
+                  )}
                 </div>
               </div>
             )}

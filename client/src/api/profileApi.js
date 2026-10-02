@@ -26,3 +26,8 @@ export const deleteProject = (id) => api.delete(`/profile/projects/${id}`)
 
 export const addCertification = (data) => api.post('/profile/certifications', data)
 export const deleteCertification = (id) => api.delete(`/profile/certifications/${id}`)
+
+export const addAchievement = (data) => api.post('/profile/achievements', data)
+export const updateAchievement = (id, data) => api.put(`/profile/achievements/${id}`, data)
+export const deleteAchievement = (id) => api.delete(`/profile/achievements/${id}`)
+

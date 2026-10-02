@@ -10,6 +10,7 @@ const Education = require('./Education');
 const Experience = require('./Experience');
 const Project = require('./Project');
 const Certification = require('./Certification');
+const Achievement = require('./Achievement');
 const ResumeTemplate = require('./ResumeTemplate');
 const Resume = require('./Resume');
 const JobDescription = require('./JobDescription');
@@ -48,6 +49,10 @@ Project.belongsTo(User, { foreignKey: 'user_id' });
 // User → Certifications
 User.hasMany(Certification, { foreignKey: 'user_id', as: 'certifications', onDelete: 'CASCADE' });
 Certification.belongsTo(User, { foreignKey: 'user_id' });
+
+// User → Achievements
+User.hasMany(Achievement, { foreignKey: 'user_id', as: 'achievements', onDelete: 'CASCADE' });
+Achievement.belongsTo(User, { foreignKey: 'user_id' });
 
 // User → Resumes
 User.hasMany(Resume, { foreignKey: 'user_id', as: 'resumes', onDelete: 'CASCADE' });
@@ -191,6 +196,7 @@ module.exports = {
   Experience,
   Project,
   Certification,
+  Achievement,
   ResumeTemplate,
   Resume,
   JobDescription,

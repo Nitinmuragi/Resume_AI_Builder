@@ -37,4 +37,9 @@ router.delete('/projects/:id', auth, ctrl.deleteProject);
 router.post('/certifications', auth, ctrl.addCertification);
 router.delete('/certifications/:id', auth, ctrl.deleteCertification);
 
+// Achievements
+router.post('/achievements', auth, ctrl.addAchievement);
+router.put('/achievements/:id', auth, ctrl.updateAchievement);
+router.delete('/achievements/:id', auth, ctrl.deleteAchievement);
+
 module.exports = router;

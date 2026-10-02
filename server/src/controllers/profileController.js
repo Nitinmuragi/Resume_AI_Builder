@@ -1,6 +1,6 @@
 const {
   Profile, UserSkill, Skill, UserLanguage, Language,
-  Education, Experience, Project, Certification, User,
+  Education, Experience, Project, Certification, Achievement, User,
 } = require('../models');
 const { uploadToCloudinary } = require('../services/uploadService');
 
@@ -25,6 +25,7 @@ exports.getProfile = async (req, res, next) => {
         { model: Experience, as: 'experience' },
         { model: Project, as: 'projects' },
         { model: Certification, as: 'certifications' },
+        { model: Achievement, as: 'achievements' },
       ],
     });
 
@@ -281,6 +282,40 @@ exports.deleteCertification = async (req, res, next) => {
     const deleted = await Certification.destroy({ where: { id: req.params.id, user_id: req.user.id } });
     if (!deleted) return res.status(404).json({ error: 'Certification not found.' });
     res.json({ message: 'Certification removed.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// POST /api/profile/achievements
+exports.addAchievement = async (req, res, next) => {
+  try {
+    const achievement = await Achievement.create({ user_id: req.user.id, ...req.body });
+    res.status(201).json(achievement);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// PUT /api/profile/achievements/:id
+exports.updateAchievement = async (req, res, next) => {
+  try {
+    const [updated] = await Achievement.update(req.body, {
+      where: { id: req.params.id, user_id: req.user.id },
+    });
+    if (!updated) return res.status(404).json({ error: 'Achievement not found.' });
+    res.json({ message: 'Achievement updated.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// DELETE /api/profile/achievements/:id
+exports.deleteAchievement = async (req, res, next) => {
+  try {
+    const deleted = await Achievement.destroy({ where: { id: req.params.id, user_id: req.user.id } });
+    if (!deleted) return res.status(404).json({ error: 'Achievement not found.' });
+    res.json({ message: 'Achievement removed.' });
   } catch (err) {
     next(err);
   }
